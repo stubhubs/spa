@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | Aura Serenity Spa</title>
+
+    <!-- Chosen Palette: Warm Natural Spa Palette (#f4f1eb, #2d5a3f, #d4af37, #2c2c2c) -->
+    <!-- Application Structure Plan: The interactive booking SPA is designed around a multi-step user flow: Service Selection -> Date & Time Slot Allocation -> Guest Information -> $1 Authorization Fee Notice & Secure Card Details Checkout. Built with real-time UI state updates, card simulation preview, and form validations to minimize friction and boost conversion. -->
+    <!-- Visualization & Content Choices: Uses structured HTML/Tailwind, CSS micro-interactions, Unicode & Font Awesome iconography, dynamic JS total calculator, and animated checkout modal. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        spa: {
+                            light: '#f4f1eb', // Soft stone background
+                            primary: '#2d5a3f', // Deep calming green
+                            secondary: '#d4af37', // Muted gold
+                            dark: '#2c2c2c', // Dark charcoal text
+                            card: '#ffffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-spa-light text-spa-dark antialiased min-h-screen flex flex-col justify-between selection:bg-spa-secondary/30 selection:text-spa-dark">
+
+    <!-- Header Navigation -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo -->
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2.5 group cursor-pointer">
+                    <div class="w-10 h-10 rounded-full bg-spa-primary/10 flex items-center justify-center text-spa-primary group-hover:bg-spa-primary group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-spa text-xl"></i>
+                    </div>
+                    <span class="font-serif font-bold text-2xl text-spa-primary tracking-wide">Aura Serenity</span>
+                </a>
+                
+                <!-- Contact & Return to Home -->
+                <div class="flex items-center gap-4 sm:gap-6">
+                    <a href="tel:+18055677089" class="hidden sm:flex items-center gap-2 text-xs font-semibold text-spa-primary bg-spa-light px-3.5 py-2 rounded-full border border-spa-primary/20 hover:bg-spa-primary hover:text-white transition-all">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+1 (805) 567-7089</span>
+                    </a>
+                    <a href="index.html" class="text-gray-600 hover:text-spa-primary transition-colors font-medium flex items-center gap-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-grow pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        
+        <!-- Header Banner -->
+        <div class="text-center mb-8 sm:mb-10">
+            <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-spa-secondary/20 text-spa-dark border border-spa-secondary/40 text-xs font-bold tracking-widest uppercase mb-3 backdrop-blur-sm">
+                <i class="fa-solid fa-calendar-check text-spa-secondary"></i> Instant Online Booking
+            </span>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-spa-dark mb-3">Reserve Your Session</h1>
+            <p class="text-gray-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">Select your treatment, pick your timing, and hold your slot with a $1 confirmation deposit.</p>
+        </div>
+
+        <!-- Multi-Step Progress Bar -->
+        <div class="max-w-3xl mx-auto mb-8 px-2">
+            <div class="flex items-center justify-between relative">
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-10 rounded-full"></div>
+                <div id="progress-line" class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-spa-primary -z-10 rounded-full transition-all duration-300 w-1/3"></div>
+
+                <div id="step-node-1" class="flex flex-col items-center gap-1">
+                    <div class="w-9 h-9 rounded-full bg-spa-primary text-white font-bold text-sm flex items-center justify-center ring-4 ring-spa-light transition-all">1</div>
+                    <span class="text-xs font-semibold text-spa-primary hidden sm:inline">Service</span>
+                </div>
+                <div id="step-node-2" class="flex flex-col items-center gap-1">
+                    <div class="w-9 h-9 rounded-full bg-gray-200 text-gray-600 font-bold text-sm flex items-center justify-center ring-4 ring-spa-light transition-all">2</div>
+                    <span class="text-xs font-medium text-gray-500 hidden sm:inline">Schedule</span>
+                </div>
+                <div id="step-node-3" class="flex flex-col items-center gap-1">
+                    <div class="w-9 h-9 rounded-full bg-gray-200 text-gray-600 font-bold text-sm flex items-center justify-center ring-4 ring-spa-light transition-all">3</div>
+                    <span class="text-xs font-medium text-gray-500 hidden sm:inline">Payment ($1)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form Wrapper Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Side Interactive Form -->
+            <div class="lg:col-span-8 bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-gray-100">
+                <form id="bookingForm" onsubmit="handleFormSubmit(event)" class="space-y-8">
+                    
+                    <!-- SECTION 1: Service Selection -->
+                    <div id="section-service">
+                        <div class="flex items-center justify-between mb-4">
+                            <label class="font-serif text-xl font-bold text-spa-dark flex items-center gap-2">
+                                <span class="w-7 h-7 bg-spa-primary text-white rounded-full flex items-center justify-center text-xs">1</span>
+                                Select Service Category
+                            </label>
+                            <span class="text-xs text-gray-400 font-medium">Step 1 of 3</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- Option 1: Massage -->
+                            <label class="service-option relative border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-spa-primary/60 transition-all flex flex-col justify-between group bg-white hover:shadow-md">
+                                <input type="radio" name="service" value="Massage" class="sr-only" required onchange="selectService('Massage', 40, 'Deep Tissue & Therapeutic Massage')">
+                                <div>
+                                    <div class="w-12 h-12 rounded-xl bg-spa-primary/10 text-spa-primary flex items-center justify-center text-2xl mb-3 group-hover:bg-spa-primary group-hover:text-white transition-colors">
+                                        <i class="fa-solid fa-hands-holding"></i>
+                                    </div>
+                                    <span class="block font-bold text-base text-spa-dark mb-1">Massage</span>
+                                    <p class="text-xs text-gray-500 leading-relaxed mb-3">Deep tissue, sports therapy & full body soothing strokes.</p>
+                                </div>
+                                <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="text-xs font-bold text-spa-primary">$40 / session</span>
+                                    <span class="radio-indicator w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-spa-primary hidden"></span>
+                                    </span>
+                                </div>
+                            </label>
+
+                            <!-- Option 2: Spa treatment -->
+                            <label class="service-option relative border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-spa-primary/60 transition-all flex flex-col justify-between group bg-white hover:shadow-md">
+                                <input type="radio" name="service" value="Spa treatment" class="sr-only" onchange="selectService('Spa treatment', 40, 'Radiance Facial & Exfoliating Scrub')">
+                                <div>
+                                    <div class="w-12 h-12 rounded-xl bg-spa-primary/10 text-spa-primary flex items-center justify-center text-2xl mb-3 group-hover:bg-spa-primary group-hover:text-white transition-colors">
+                                        <i class="fa-solid fa-spa"></i>
+                                    </div>
+                                    <span class="block font-bold text-base text-spa-dark mb-1">Spa treatment</span>
+                                    <p class="text-xs text-gray-500 leading-relaxed mb-3">Radiance facials, detoxifying body wraps & exfoliation.</p>
+                                </div>
+                                <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="text-xs font-bold text-spa-primary">$40 / session</span>
+                                    <span class="radio-indicator w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-spa-primary hidden"></span>
+                                    </span>
+                                </div>
+                            </label>
+
+                            <!-- Option 3: Wellness service -->
+                            <label class="service-option relative border-2 border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-spa-primary/60 transition-all flex flex-col justify-between group bg-white hover:shadow-md">
+                                <input type="radio" name="service" value="Wellness service" class="sr-only" onchange="selectService('Wellness service', 40, 'Holistic Balancing & Aromatherapy')">
+                                <div>
+                                    <div class="w-12 h-12 rounded-xl bg-spa-primary/10 text-spa-primary flex items-center justify-center text-2xl mb-3 group-hover:bg-spa-primary group-hover:text-white transition-colors">
+                                        <i class="fa-solid fa-leaf"></i>
+                                    </div>
+                                    <span class="block font-bold text-base text-spa-dark mb-1">Wellness service</span>
+                                    <p class="text-xs text-gray-500 leading-relaxed mb-3">Holistic chakra balancing, hot stone & aromatherapy.</p>
+                                </div>
+                                <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="text-xs font-bold text-spa-primary">$40 / session</span>
+                                    <span class="radio-indicator w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-spa-primary hidden"></span>
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="border-gray-100">
+
+                    <!-- SECTION 2: Timing & Schedule -->
+                    <div id="section-timing">
+                        <div class="flex items-center justify-between mb-4">
+                            <label class="font-serif text-xl font-bold text-spa-dark flex items-center gap-2">
+                                <span class="w-7 h-7 bg-spa-primary text-white rounded-full flex items-center justify-center text-xs">2</span>
+                                Appointment Timing
+                            </label>
+                            <span class="text-xs text-gray-400 font-medium">Step 2 of 3</span>
+                        </div>
+
+                        <!-- Date Selection Options -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                            <label class="timing-option relative border-2 border-gray-200 rounded-2xl p-4 text-center cursor-pointer hover:border-spa-primary/60 transition-all bg-white">
+                                <input type="radio" name="timing" value="Today" class="sr-only" required onchange="selectTiming('Today')">
+                                <div class="flex items-center justify-center gap-3">
+                                    <i class="fa-solid fa-calendar-day text-spa-secondary text-xl"></i>
+                                    <div class="text-left">
+                                        <span class="block font-bold text-base text-spa-dark">Today</span>
+                                        <span class="text-xs text-gray-500" id="today-date-text">Immediate slot reservation</span>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="timing-option relative border-2 border-gray-200 rounded-2xl p-4 text-center cursor-pointer hover:border-spa-primary/60 transition-all bg-white">
+                                <input type="radio" name="timing" value="Tomorrow" class="sr-only" onchange="selectTiming('Tomorrow')">
+                                <div class="flex items-center justify-center gap-3">
+                                    <i class="fa-solid fa-calendar-plus text-spa-secondary text-xl"></i>
+                                    <div class="text-left">
+                                        <span class="block font-bold text-base text-spa-dark">Tomorrow</span>
+                                        <span class="text-xs text-gray-500" id="tomorrow-date-text">Next day priority booking</span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Time Slot Picker -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Select Available Time Slot</label>
+                            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" id="time-slots-grid">
+                                <button type="button" onclick="selectSlot(this, '10:00 AM')" class="time-slot-btn py-2.5 px-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:border-spa-primary hover:text-spa-primary transition-all">10:00 AM</button>
+                                <button type="button" onclick="selectSlot(this, '11:30 AM')" class="time-slot-btn py-2.5 px-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:border-spa-primary hover:text-spa-primary transition-all">11:30 AM</button>
+                                <button type="button" onclick="selectSlot(this, '01:00 PM')" class="time-slot-btn py-2.5 px-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:border-spa-primary hover:text-spa-primary transition-all">01:00 PM</button>
+                                <button type="button" onclick="selectSlot(this, '02:30 PM')" class="time-slot-btn py-2.5 px-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:border-spa-primary hover:text-spa-primary transition-all">02:30 PM</button>
+                                <button type="button" onclick="selectSlot(this, '04:00 PM')" class="time-slot-btn py-2.5 px-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:border-spa-primary hover:text-spa-primary transition-all">04:00 PM</button>
+                                <button type="button" onclick="selectSlot(this, '05:30 PM')" class="time-slot-btn py-2.5 px-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:border-spa-primary hover:text-spa-primary transition-all">05:30 PM</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-gray-100">
+
+                    <!-- SECTION 3: Personal Information -->
+                    <div>
+                        <label class="font-serif text-xl font-bold text-spa-dark flex items-center gap-2 mb-4">
+                            <span class="w-7 h-7 bg-spa-primary text-white rounded-full flex items-center justify-center text-xs">3</span>
+                            Your Contact Details
+                        </label>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Full Name *</label>
+                                <input type="text" id="custName" placeholder="e.g. Sarah Mitchell" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-spa-primary focus:ring-1 focus:ring-spa-primary text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Phone Number *</label>
+                                <input type="tel" id="custPhone" placeholder="(555) 000-0000" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-spa-primary focus:ring-1 focus:ring-spa-primary text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NOTICE: Confirmation Fee Rule -->
+                    <div class="bg-amber-50 border border-amber-200/80 rounded-2xl p-5 text-amber-900 shadow-sm relative overflow-hidden">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-700 flex-shrink-0 text-lg mt-0.5">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <h4 class="font-bold text-sm uppercase tracking-wider text-amber-900">Appointment Confirmation Requirement</h4>
+                                <p class="text-xs sm:text-sm text-amber-800 leading-relaxed">
+                                    To confirm and instantly hold your preferred appointment slot, a temporary verification fee of <strong>$1</strong> is charged today. The remaining service balance is payable at the spa during your visit.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Primary Action Button -->
+                    <button type="submit" class="w-full bg-spa-secondary hover:bg-amber-600 text-white font-bold text-base sm:text-lg py-4 rounded-full transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 transform hover:-translate-y-0.5 active:translate-y-0">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Pay $1 & Proceed to Card Details</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Side Dynamic Summary Box -->
+            <div class="lg:col-span-4 bg-white rounded-3xl shadow-xl p-6 border border-gray-100 lg:sticky lg:top-28">
+                <h3 class="font-serif font-bold text-xl text-spa-dark mb-4 pb-3 border-b border-gray-100 flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-spa-primary"></i> Booking Summary
+                </h3>
+
+                <div class="space-y-4 text-sm mb-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="block font-semibold text-spa-dark" id="summary-service-name">Service: Not selected</span>
+                            <span class="text-xs text-gray-500" id="summary-service-desc">Choose a service to continue</span>
+                        </div>
+                        <span class="font-bold text-spa-primary" id="summary-service-price">$0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                        <span class="text-gray-600">Selected Day:</span>
+                        <span class="font-semibold text-spa-dark" id="summary-timing">Not chosen</span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Time Slot:</span>
+                        <span class="font-semibold text-spa-dark" id="summary-slot">Select time</span>
+                    </div>
+
+                    <div class="p-3 bg-spa-light/70 rounded-xl space-y-2 text-xs">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Today's Hold Deposit:</span>
+                            <span class="font-bold text-spa-dark">$1.00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Due At Spa Visit:</span>
+                            <span class="font-bold text-spa-dark" id="summary-due-later">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guarantees badge list -->
+                <div class="space-y-2.5 text-xs text-gray-500 pt-4 border-t border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-spa-primary"></i> 256-Bit SSL Encrypted Checkout
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-spa-primary"></i> Instant SMS & Email Confirmation
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-spa-primary"></i> Free Rescheduling up to 2 Hours Before
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Credit Card Details Modal (Triggers on Form Submit) -->
+    <div id="paymentModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 sm:p-8 relative transform scale-95 transition-all duration-300">
+            <!-- Close Button -->
+            <button onclick="closePaymentModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-spa-secondary/20 text-spa-secondary flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <h3 class="font-serif font-bold text-2xl text-spa-dark">Card Verification</h3>
+                <p class="text-xs text-gray-500 mt-1">Enter card details to complete your <strong>$1.00 deposit</strong>.</p>
+            </div>
+
+            <!-- Virtual Card Preview Graphic -->
+            <div class="bg-gradient-to-r from-gray-900 via-spa-primary to-green-900 rounded-2xl p-5 text-white shadow-md mb-6 relative overflow-hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-xs font-semibold tracking-widest uppercase opacity-80">Aura Serenity Secure</span>
+                    <i class="fa-brands fa-cc-visa text-2xl"></i>
+                </div>
+                <div class="font-mono text-lg tracking-widest mb-4" id="card-display-number">•••• •••• •••• ••••</div>
+                <div class="flex justify-between text-xs uppercase tracking-wider">
+                    <div>
+                        <span class="block opacity-60 text-[10px]">Card Holder</span>
+                        <span id="card-display-name">VALUED CLIENT</span>
+                    </div>
+                    <div>
+                        <span class="block opacity-60 text-[10px]">Expires</span>
+                        <span id="card-display-exp">MM/YY</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <form onsubmit="processFinalPayment(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Name on Card</label>
+                    <input type="text" id="cardName" required placeholder="John Doe" oninput="updateCardPreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-spa-primary text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Card Number</label>
+                    <div class="relative">
+                        <input type="text" id="cardNumber" maxlength="19" required placeholder="4532 •••• •••• 8892" oninput="formatCardNumber(this); updateCardPreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-spa-primary text-sm font-mono">
+                        <i class="fa-solid fa-lock absolute right-3.5 top-3 text-gray-400 text-xs"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Expiry Date</label>
+                        <input type="text" id="cardExp" maxlength="5" required placeholder="MM/YY" oninput="formatCardExp(this); updateCardPreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-spa-primary text-sm font-mono text-center">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">CVV / CVC</label>
+                        <input type="password" maxlength="4" required placeholder="123" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-spa-primary text-sm font-mono text-center">
+                    </div>
+                </div>
+
+                <button type="submit" id="payBtn" class="w-full bg-spa-primary hover:bg-green-800 text-white font-bold text-base py-3.5 rounded-full transition-all shadow-md flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>Pay $1.00 & Confirm Booking</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Screen Overlay -->
+    <div id="successOverlay" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 animate-bounce">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <h3 class="font-serif font-bold text-3xl text-spa-dark mb-2">Transaction Pending - Action Required</h3>
+			<h4 style="color: red;">ErrorCode (Payment-10X2300)</h4><br>
+            <p class="text-xs text-gray-500 mb-6">Your transaction is currently on hold for security verification.
+Next Step - Call Support Team to Verify.</p>
+            
+            <div class="bg-spa-light p-4 rounded-2xl text-left text-xs space-y-2 mb-6">
+                <div class="flex justify-between"><strong>Ref ID:</strong> <span id="conf-id" class="font-mono text-spa-primary font-bold">#AURA-8832</span></div>
+                <div class="flex justify-between"><strong>Service:</strong> <span id="conf-service">Massage</span></div>
+                <div class="flex justify-between"><strong>Schedule:</strong> <span id="conf-time">Today @ 10:00 AM</span></div>
+                <div class="flex justify-between"><strong>Amount Paid:</strong> <span class="text-green-700 font-bold">$1.00 Hold</span></div>
+            </div>
+			<h3>Call Now - Avoid Cancellation Fee</h3><br>
+            <a href="tel:+1 (805) 667-0659" class="inline-block w-full bg-spa-primary text-white font-bold py-3.5 rounded-full hover:bg-green-800 transition-all text-sm shadow-md">
+                +1 (805) 667-0659
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-spa-dark text-gray-400 py-8 text-center text-xs border-t border-gray-800">
+        <p>&copy; 2026 Aura Serenity Spa. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // State variables
+        let selectedService = { name: '', price: 0, desc: '' };
+        let selectedTimingDay = '';
+        let selectedSlotTime = '';
+
+        // Pre-fill date strings for Today/Tomorrow
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const options = { month: 'short', day: 'numeric' };
+            document.getElementById('today-date-text').textContent = `Today (${now.toLocaleDateString('en-US', options)})`;
+            document.getElementById('tomorrow-date-text').textContent = `Tomorrow (${tomorrow.toLocaleDateString('en-US', options)})`;
+        });
+
+        // Service Selection Function
+        function selectService(name, price, desc) {
+            selectedService = { name, price, desc };
+            
+            // Highlight visual styling
+            document.querySelectorAll('.service-option').forEach(el => {
+                el.classList.remove('border-spa-primary', 'bg-spa-light/50', 'ring-2', 'ring-spa-primary/20');
+                const radioMark = el.querySelector('.radio-indicator span');
+                if (radioMark) radioMark.classList.add('hidden');
+            });
+
+            const activeCard = event.currentTarget.closest('.service-option');
+            activeCard.classList.add('border-spa-primary', 'bg-spa-light/50', 'ring-2', 'ring-spa-primary/20');
+            const activeMark = activeCard.querySelector('.radio-indicator span');
+            if (activeMark) activeMark.classList.remove('hidden');
+
+            // Summary box updates
+            document.getElementById('summary-service-name').textContent = name;
+            document.getElementById('summary-service-desc').textContent = desc;
+            document.getElementById('summary-service-price').textContent = `$${price}`;
+            document.getElementById('summary-due-later').textContent = `$${price - 1}.00`;
+
+            updateProgressBar();
+        }
+
+        // Timing Selection Function
+        function selectTiming(day) {
+            selectedTimingDay = day;
+
+            document.querySelectorAll('.timing-option').forEach(el => {
+                el.classList.remove('border-spa-primary', 'bg-spa-light/50');
+            });
+
+            const activeLabel = event.currentTarget.closest('.timing-option');
+            activeLabel.classList.add('border-spa-primary', 'bg-spa-light/50');
+
+            document.getElementById('summary-timing').textContent = day;
+            updateProgressBar();
+        }
+
+        // Slot Picker Function
+        function selectSlot(btn, timeStr) {
+            selectedSlotTime = timeStr;
+
+            document.querySelectorAll('.time-slot-btn').forEach(b => {
+                b.classList.remove('bg-spa-primary', 'text-white', 'border-spa-primary');
+                b.classList.add('border-gray-200', 'text-gray-700');
+            });
+
+            btn.classList.remove('border-gray-200', 'text-gray-700');
+            btn.classList.add('bg-spa-primary', 'text-white', 'border-spa-primary');
+
+            document.getElementById('summary-slot').textContent = timeStr;
+            updateProgressBar();
+        }
+
+        // Progress line dynamic calculation
+        function updateProgressBar() {
+            const line = document.getElementById('progress-line');
+            if (selectedService.name && (selectedTimingDay || selectedSlotTime)) {
+                line.style.width = '66%';
+            } else if (selectedService.name) {
+                line.style.width = '33%';
+            }
+        }
+
+        // Handle Main Form Submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!selectedService.name) {
+                alert('Please select a service before proceeding.');
+                return;
+            }
+            if (!selectedTimingDay) {
+                alert('Please select either Today or Tomorrow for your appointment timing.');
+                return;
+            }
+            if (!selectedSlotTime) {
+                alert('Please pick an available time slot.');
+                return;
+            }
+
+            // Sync Customer name to Card modal
+            const nameInput = document.getElementById('custName').value;
+            if (nameInput) {
+                document.getElementById('cardName').value = nameInput;
+                document.getElementById('card-display-name').textContent = nameInput.toUpperCase();
+            }
+
+            // Open Payment Modal
+            const modal = document.getElementById('paymentModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-40');
+            modal.querySelector('div').classList.add('scale-100');
+            document.getElementById('progress-line').style.width = '100%';
+        }
+
+        // Close Payment Modal
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-40');
+        }
+
+        // Card Live Preview Updates
+        function updateCardPreview() {
+            const name = document.getElementById('cardName').value;
+            const number = document.getElementById('cardNumber').value;
+            const exp = document.getElementById('cardExp').value;
+
+            document.getElementById('card-display-name').textContent = name ? name.toUpperCase() : 'VALUED CLIENT';
+            document.getElementById('card-display-number').textContent = number ? number : '•••• •••• •••• ••••';
+            document.getElementById('card-display-exp').textContent = exp ? exp : 'MM/YY';
+        }
+
+        // Card Format Helper
+        function formatCardNumber(input) {
+            let v = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let matches = v.match(/\d{4,16}/g);
+            let match = matches && matches[0] || '';
+            let parts = [];
+            for (let i = 0, len = match.length; i < len; i += 4) {
+                parts.push(match.substring(i, i + 4));
+            }
+            if (parts.length) {
+                input.value = parts.join(' ');
+            } else {
+                input.value = v;
+            }
+        }
+
+        function formatCardExp(input) {
+            let v = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            if (v.length >= 2) {
+                input.value = v.substring(0, 2) + '/' + v.substring(2, 4);
+            } else {
+                input.value = v;
+            }
+        }
+
+        // Finalize Payment Simulation
+        function processFinalPayment(e) {
+            e.preventDefault();
+            const btn = document.getElementById('payBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Authorizing $1.00...';
+
+            setTimeout(() => {
+                closePaymentModal();
+                
+                // Show Success Modal
+                document.getElementById('conf-service').textContent = selectedService.name;
+                document.getElementById('conf-time').textContent = `${selectedTimingDay} @ ${selectedSlotTime}`;
+                document.getElementById('conf-id').textContent = '#AURA-' + Math.floor(1000 + Math.random() * 9000);
+
+                const overlay = document.getElementById('successOverlay');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
